@@ -1,3 +1,4 @@
+// L-system fractal generator
 const presets = {
   1: { name: "Koch snowflake",
        axiom: "F--F--F", rules: { F: "F+F--F+F" },
@@ -90,6 +91,7 @@ function walk(sentence, p, cb) {
   }
 }
 
+// Preset selection via number keys from 1-5
 function keyPressed() {
   if (presets[key]) {
     currentKey = key;
