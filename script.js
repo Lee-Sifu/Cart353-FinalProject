@@ -2,7 +2,7 @@
 const presets = {
   1: { name: "Koch snowflake",
        axiom: "F--F--F", rules: { F: "F+F--F+F" },
-       angle: 60, draws: "F", iterations: 4 },
+       angle: 55, draws: "F", iterations: 4 },
   2: { name: "Sierpinski triangle",
        axiom: "F-G-G", rules: { F: "F-G+F+G-F", G: "GG" },
        angle: 120, draws: "FG", iterations: 6 },
