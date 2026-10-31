@@ -15,6 +15,15 @@ const presets = {
   5: { name: "Hilbert curve",
        axiom: "A", rules: { A: "+BF-AFA-FB+", B: "-AF+BFB+FA-" },
        angle: 90, draws: "F", iterations: 5 },
+  6: { name: "Fractal plant",
+       axiom: "X", rules: { X: "F-[[X]+X]+F[+FX]-X", F: "FF" },
+       angle: 25, draws: "F", iterations: 5 },
+  7: { name: "Fractal tree",
+       axiom: "F", rules: { F: "FF-[-F+F+F]+[+F-F-F]" },
+       angle: 22.5, draws: "F", iterations: 5 },
+  8: { name: "Peano curve",
+       axiom: "L", rules: { L: "+RF-LFL-FR+", R: "-LF+RFR+FL-" },
+       angle: 80, draws: "LR", iterations: 4 }
 };
 
 let currentKey = 1;
@@ -91,7 +100,7 @@ function walk(sentence, p, cb) {
   }
 }
 
-// Preset selection via number keys from 1-5
+// Preset selection via number keys from 1-8
 function keyPressed() {
   if (presets[key]) {
     currentKey = key;
