@@ -18,12 +18,15 @@ const presets = {
   6: { name: "Three-Sided Koch Curve Island",
        axiom: "F++F++F", rules: { F: "F-F++F-F" },
        angle: 60, draws: "F", iterations: 5 },
-  7: { name: "Fractal tree",
-       axiom: "F", rules: { F: "FF-[-F+F+F]+[+F-F-F]" },
-       angle: 22.5, draws: "F", iterations: 5 },
+  7: { name: "Levy C curve",
+        axiom: "F", rules: { F: "+F--F+" },
+        angle: 45, draws: "F", iterations: 10 },
   8: { name: "Peano curve",
        axiom: "L", rules: { L: "+RF-LFL-FR+", R: "-LF+RFR+FL-" },
-       angle: 80, draws: "LR", iterations: 4 }
+       angle: 80, draws: "LR", iterations: 4 },
+  9: { name: "Quadratic Koch island",
+        axiom: "F+F+F+F", rules: { F: "F+F-F-FF+F+F-F" },
+        angle: 90, draws: "F", iterations: 5 },
 };
 
 let currentKey = 1;
@@ -71,7 +74,7 @@ function draw() {
   textSize(16);
   textAlign(LEFT, TOP);
   text(`${currentKey}: ${p.name}  (iterations: ${p.iterations})`, 10, 18);
-  text("Press 1-8 to select a preset, click to add an iteration", 10, height - 30);
+  text("Press 1-9 to select a preset, click to add an iteration", 10, height - 30);
 }
 
 // Expand the axiom by applying the rules
@@ -104,7 +107,7 @@ function walk(sentence, p, cb) {
   }
 }
 
-// Preset selection via number keys from 1-8
+// Preset selection via number keys from 1-9
 function keyPressed() {
   if (presets[key]) {
     currentKey = key;
@@ -115,6 +118,6 @@ function keyPressed() {
 // Optional: click to add an iteration (wraps around at 8)
 function mousePressed() {
   const p = presets[currentKey];
-  p.iterations = p.iterations >= 8 ? 1 : p.iterations + 1;
+  p.iterations = p.iterations >= 9 ? 1 : p.iterations + 1;
   redraw();
 }
