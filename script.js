@@ -17,16 +17,16 @@ const presets = {
        angle: 90, draws: "F", iterations: 5 },
   6: { name: "Three-Sided Koch Curve Island",
        axiom: "F++F++F", rules: { F: "F-F++F-F" },
-       angle: 60, draws: "F", iterations: 5 },
+       angle: 60, draws: "F", iterations: 4 },
   7: { name: "Levy C curve",
         axiom: "F", rules: { F: "+F--F+" },
-        angle: 45, draws: "F", iterations: 10 },
+        angle: 45, draws: "F", iterations: 3 },
   8: { name: "Peano curve",
        axiom: "L", rules: { L: "+RF-LFL-FR+", R: "-LF+RFR+FL-" },
        angle: 80, draws: "LR", iterations: 4 },
   9: { name: "Quadratic Koch island",
         axiom: "F+F+F+F", rules: { F: "F+F-F-FF+F+F-F" },
-        angle: 90, draws: "F", iterations: 5 },
+        angle: 90, draws: "F", iterations: 1 },
 };
 
 let currentKey = 1;
