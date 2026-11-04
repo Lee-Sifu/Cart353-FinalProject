@@ -2,7 +2,7 @@
 const presets = {
   1: { name: "Koch snowflake",
        axiom: "F--F--F", rules: { F: "F+F--F+F" },
-       angle: 55, draws: "F", iterations: 4 },
+       angle: 60, draws: "F", iterations: 4 },
   2: { name: "Sierpinski triangle",
        axiom: "F-G-G", rules: { F: "F-G+F+G-F", G: "GG" },
        angle: 120, draws: "FG", iterations: 6 },
@@ -30,6 +30,9 @@ const presets = {
 };
 
 let currentKey = 1;
+const maxSymbols = 90000;
+let currentSentence = "";
+let statusMessage = "";
 
 function setup() {
   createCanvas(600, 600);
@@ -40,6 +43,14 @@ function setup() {
 function draw() {
   const p = presets[currentKey];
   const sentence = build(p);
+  if (sentence === null) {
+    background(0, 0, 10);
+    noStroke();
+    fill(0, 0, 100);
+    text("This preset exceeds the drawing limit.", 10, 18);
+    return;
+  }
+  currentSentence = sentence;
 
   // Dry run: find the bounding box with unit-length segments
   let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
@@ -75,17 +86,28 @@ function draw() {
   textAlign(LEFT, TOP);
   text(`${currentKey}: ${p.name}  (iterations: ${p.iterations})`, 10, 18);
   text("Press 1-9 to select a preset, click to add an iteration", 10, height - 30);
+  if (statusMessage) text(statusMessage, 10, height - 52);
 }
 
 // Expand the axiom by applying the rules
 function build(p) {
   let s = p.axiom;
   for (let n = 0; n < p.iterations; n++) {
-    let next = "";
-    for (const c of s) next += p.rules[c] ?? c;
-    s = next;
+    if (expandedLength(s, p) > maxSymbols) return null;
+    const next = [];
+    for (const c of s) next.push(p.rules[c] ?? c);
+    s = next.join("");
   }
   return s;
+}
+
+function expandedLength(sentence, p) {
+  let length = 0;
+  for (const c of sentence) {
+    length += (p.rules[c] ?? c).length;
+    if (length > maxSymbols) return length;
+  }
+  return length;
 }
 
 // Turtle interpreter: calls cb for each line segment
@@ -111,13 +133,22 @@ function walk(sentence, p, cb) {
 function keyPressed() {
   if (presets[key]) {
     currentKey = key;
+    statusMessage = "";
     redraw();
   }
 }
 
-// Optional: click to add an iteration (wraps around at 8)
+// Click to add an iteration (wraps around at 9)
 function mousePressed() {
   const p = presets[currentKey];
-  p.iterations = p.iterations >= 9 ? 1 : p.iterations + 1;
+  if (p.iterations >= 9) {
+    p.iterations = 1;
+    statusMessage = "";
+  } else if (expandedLength(currentSentence, p) > maxSymbols) {
+    statusMessage = "Detail limit reached; choose another preset or click to reset";
+  } else {
+    p.iterations++;
+    statusMessage = "";
+  }
   redraw();
 }
