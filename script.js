@@ -38,6 +38,11 @@ function draw() {
   const p = presets[currentKey];
   const sentence = build(p);
 
+  fill(255);
+  textSize(16);
+  textAlign(LEFT, TOP);
+  text("Press 1-8 to select a preset, click to add an iteration", 10, height - 30);
+
   // Dry run: find the bounding box with unit-length segments
   let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
   let count = 0;
