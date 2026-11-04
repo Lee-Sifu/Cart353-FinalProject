@@ -38,11 +38,6 @@ function draw() {
   const p = presets[currentKey];
   const sentence = build(p);
 
-  fill(255);
-  textSize(16);
-  textAlign(LEFT, TOP);
-  text("Press 1-8 to select a preset, click to add an iteration", 10, height - 30);
-
   // Dry run: find the bounding box with unit-length segments
   let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
   let count = 0;
@@ -72,7 +67,10 @@ function draw() {
 
   noStroke();
   fill(0, 0, 100);
+  textSize(16);
+  textAlign(LEFT, TOP);
   text(`${currentKey}: ${p.name}  (iterations: ${p.iterations})`, 10, 18);
+  text("Press 1-8 to select a preset, click to add an iteration", 10, height - 30);
 }
 
 // Expand the axiom by applying the rules
