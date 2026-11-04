@@ -1,4 +1,4 @@
-// L-system fractal generator
+// L-system fractal presets
 const presets = {
   1: { name: "Koch snowflake",
        axiom: "F--F--F", rules: { F: "F+F--F+F" },
@@ -29,10 +29,10 @@ const presets = {
         angle: 90, draws: "F", iterations: 1 },
 };
 
-let currentKey = 1;
-const maxSymbols = 100000;
-let currentSentence = "";
-let statusMessage = "";
+let currentKey = 1; // The currently selected preset key
+const maxSymbols = 100000; // Limit to avoid freezing the browser
+let currentSentence = ""; // The current expanded L-system string
+let statusMessage = ""; // Message to display if the drawing limit is exceeded
 
 function setup() {
   createCanvas(600, 600);
