@@ -11,13 +11,13 @@ const presets = {
        angle: 90, draws: "F", iterations: 12 },
   4: { name: "Gosper curve",
        axiom: "A", rules: { A: "A-B--B+A++AA+B-", B: "+A-BB--B-A++A+B" },
-       angle: 60, draws: "AB", iterations: 4 },
+       angle: 60, draws: "AB", iterations: 3 },
   5: { name: "Hilbert curve",
        axiom: "A", rules: { A: "+BF-AFA-FB+", B: "-AF+BFB+FA-" },
        angle: 90, draws: "F", iterations: 5 },
   6: { name: "Three-Sided Koch Curve Island",
        axiom: "F++F++F", rules: { F: "F-F++F-F" },
-       angle: 60, draws: "F", iterations: 4 },
+       angle: 60, draws: "F", iterations: 3 },
   7: { name: "Levy C curve",
         axiom: "F", rules: { F: "+F--F+" },
         angle: 45, draws: "F", iterations: 3 },
@@ -30,7 +30,7 @@ const presets = {
 };
 
 let currentKey = 1;
-const maxSymbols = 90000;
+const maxSymbols = 100000;
 let currentSentence = "";
 let statusMessage = "";
 
@@ -145,7 +145,8 @@ function mousePressed() {
     p.iterations = 1;
     statusMessage = "";
   } else if (expandedLength(currentSentence, p) > maxSymbols) {
-    statusMessage = "Detail limit reached; choose another preset or click to reset";
+    p.iterations = 1;
+    statusMessage = "Detail limit reached; restarting at iteration 1";
   } else {
     p.iterations++;
     statusMessage = "";
