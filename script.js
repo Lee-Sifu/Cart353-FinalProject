@@ -5,7 +5,7 @@ const presets = {
        angle: 60, draws: "F", iterations: 2 },
   2: { name: "Another fractal",
        axiom: "f-f-f-f", rules: { f: "ff-f-f-f-f-f+f" },
-       angle: 85, draws: "f", iterations: 1 },
+       angle: 85, draws: "f", iterations: 2 },
   3: { name: "Dragon curve",
        axiom: "FX", rules: { X: "X+YF+", Y: "-FX-Y" },
        angle: 90, draws: "F", iterations: 12 },
