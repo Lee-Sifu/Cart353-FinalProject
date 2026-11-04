@@ -15,9 +15,9 @@ const presets = {
   5: { name: "Hilbert curve",
        axiom: "A", rules: { A: "+BF-AFA-FB+", B: "-AF+BFB+FA-" },
        angle: 90, draws: "F", iterations: 5 },
-  6: { name: "Fractal plant",
-       axiom: "X", rules: { X: "F-[[X]+X]+F[+FX]-X", F: "FF" },
-       angle: 25, draws: "F", iterations: 5 },
+  6: { name: "Three-Sided Koch Curve Island",
+       axiom: "F++F++F", rules: { F: "F-F++F-F" },
+       angle: 60, draws: "F", iterations: 5 },
   7: { name: "Fractal tree",
        axiom: "F", rules: { F: "FF-[-F+F+F]+[+F-F-F]" },
        angle: 22.5, draws: "F", iterations: 5 },
@@ -65,6 +65,7 @@ function draw() {
     i++;
   });
 
+  // Draw the UI text
   noStroke();
   fill(0, 0, 100);
   textSize(16);
