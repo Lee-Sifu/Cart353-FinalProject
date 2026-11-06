@@ -2,13 +2,13 @@
 const presets = {
   1: { name: "Koch snowflake",
        axiom: "F--F--F", rules: { F: "F+F--F+F" },
-       angle: 60, draws: "F", iterations: 2 },
+       angle: 60, draws: "F", iterations: 7 },
   2: { name: "Another fractal",
        axiom: "f-f-f-f", rules: { f: "ff-f-f-f-f-f+f" },
-       angle: 85, draws: "f", iterations: 2 },
+       angle: 85, draws: "f", iterations: 4 },
   3: { name: "Dragon curve",
        axiom: "FX", rules: { X: "X+YF+", Y: "-FX-Y" },
-       angle: 90, draws: "F", iterations: 12 },
+       angle: 90, draws: "F", iterations: 9 },
   4: { name: "Gosper curve",
        axiom: "A", rules: { A: "A-B--B+A++AA+B-", B: "+A-BB--B-A++A+B" },
        angle: 60, draws: "AB", iterations: 3 },
@@ -30,7 +30,7 @@ const presets = {
 };
 
 let currentKey = 1; // The currently selected preset key
-const maxSymbols = 100000; // Limit to avoid freezing the browser
+const maxSymbols = 200000; // Limit to avoid freezing the browser
 let currentSentence = ""; // The current expanded L-system string
 let statusMessage = ""; // Message to display if the drawing limit is exceeded
 
