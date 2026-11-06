@@ -35,7 +35,7 @@ let currentSentence = ""; // The current expanded L-system string
 let statusMessage = ""; // Message to display if the drawing limit is exceeded
 
 function setup() {
-  createCanvas(600, 600);
+  createCanvas(700, 700);
   colorMode(HSB, 360, 100, 100);
   noLoop();
 }
