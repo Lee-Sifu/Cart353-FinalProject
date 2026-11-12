@@ -34,6 +34,15 @@ const maxSymbols = 200000; // Limit to avoid freezing the browser
 let currentSentence = ""; // The current expanded L-system string
 let statusMessage = ""; // Message to display if the drawing limit is exceeded
 
+let segs = [];          // flat array: x1, y1, x2, y2, ... in unit coordinates
+let segCount = 0;
+let failed = false;     // true if the preset exceeds the drawing limit
+let scl = 1, offX = 0, offY = 0;
+ 
+// Animation state
+let startMs = 0;        // when the current growth animation began
+let growSeconds = 3;    // how long the growth phase lasts
+
 function setup() {
   createCanvas(700, 700);
   colorMode(HSB, 360, 100, 100);
