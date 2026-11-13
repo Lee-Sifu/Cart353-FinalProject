@@ -43,6 +43,12 @@ let scl = 1, offX = 0, offY = 0;
 let startMs = 0;        // when the current growth animation began
 let growSeconds = 3;    // how long the growth phase lasts
 
+//animation tweaks
+const rippleAmp = 0.1; // amplitude of the ripple effect
+const rippleFreq = 0.5; // frequency of the ripple effect
+const rippleScale = 0.5; // scale of the ripple effect
+const hueSpeed = 40; // speed of hue change in degrees per second
+
 function setup() {
   createCanvas(700, 700);
   colorMode(HSB, 360, 100, 100);
