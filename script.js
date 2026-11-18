@@ -52,7 +52,39 @@ const hueSpeed = 40; // speed of hue change in degrees per second
 function setup() {
   createCanvas(700, 700);
   colorMode(HSB, 360, 100, 100);
-  noLoop();
+  rebuild();
+}
+// Rebuild the current preset and compute the segments
+function rebuild() {
+  const p = presets[currentKey];
+  const sentence = build(p);
+  segs = [];
+  segCount = 0;
+  startMs = millis();
+
+  if (sentence === null) {
+    failed = true;
+    return;
+  }
+  failed = false;
+  currentSentence = sentence;
+
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  walk(sentence, p, (x1, y1, x2, y2) => {
+    segs.push(x1, y1, x2, y2);
+    minX = min(minX, x1, x2); maxX = max(maxX, x1, x2);
+    minY = min(minY, y1, y2); maxY = max(maxY, y1, y2);
+  });
+  segCount = segs.length / 4;
+
+  const margin = 30;
+  scl = min((width - 2 * margin) / (maxX - minX),
+            (height - 2 * margin) / (maxY - minY));
+  offX = (width - (maxX - minX) * scl) / 2 - minX * scl;
+  offY = (height - (maxY - minY) * scl) / 2 - minY * scl;
+
+  // Bigger fractals take a little longer to draw
+  growSeconds = constrain(segCount / 1500, 1.5, 6);
 }
 
 function draw() {
