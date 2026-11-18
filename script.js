@@ -139,6 +139,19 @@ function draw() {
   drawUI();
 }
 
+// Draw the UI text overlay
+function drawUI() {
+  const p = presets[currentKey];
+  noStroke();
+  fill(0, 0, 100);
+  textSize(16);
+  textAlign(LEFT, TOP);
+  text(`${currentKey}: ${p.name}  (iterations: ${p.iterations})`, 10, 18);
+  text("Press 1-9 to select a preset, click to add an iteration, SPACE to replay",
+       10, height - 30);
+  if (statusMessage) text(statusMessage, 10, height - 52);
+}
+
 // Expand the axiom by applying the rules
 function build(p) {
   let s = p.axiom;
@@ -184,7 +197,9 @@ function keyPressed() {
   if (presets[key]) {
     currentKey = key;
     statusMessage = "";
-    redraw();
+    rebuild();
+  } else if (key === " ") {
+    rebuild();
   }
 }
 
@@ -201,5 +216,5 @@ function mousePressed() {
     p.iterations++;
     statusMessage = "";
   }
-  redraw();
+  rebuild();
 }
