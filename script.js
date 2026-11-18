@@ -88,52 +88,55 @@ function rebuild() {
 }
 
 function draw() {
-  const p = presets[currentKey];
-  const sentence = build(p);
-  if (sentence === null) {
-    background(0, 0, 10);
+   background(0, 0, 10);
+
+  if (failed) {
     noStroke();
     fill(0, 0, 100);
+    textSize(16);
+    textAlign(LEFT, TOP);
     text("This preset exceeds the drawing limit.", 10, 18);
+    drawUI();
     return;
   }
-  currentSentence = sentence;
 
-  // Dry run: find the bounding box with unit-length segments
-  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-  let count = 0;
-  walk(sentence, p, (x1, y1, x2, y2) => {
-    minX = min(minX, x1, x2); maxX = max(maxX, x1, x2);
-    minY = min(minY, y1, y2); maxY = max(maxY, y1, y2);
-    count++;
-  });
+  const t = millis() / 1000;
+  const elapsed = (millis() - startMs) / 1000;
 
-  // Scale and center to fit the canvas
-  const margin = 30;
-  const s = min((width - 2 * margin) / (maxX - minX),
-                (height - 2 * margin) / (maxY - minY));
-  const offX = (width - (maxX - minX) * s) / 2 - minX * s;
-  const offY = (height - (maxY - minY) * s) / 2 - minY * s;
+  // Growth progress, eased so it starts fast and settles
+  const g = constrain(elapsed / growSeconds, 0, 1);
+  const eased = 1 - pow(1 - g, 3);
+  const n = floor(eased * segCount);
 
-  background(0, 0, 10);
+  // Ripples fade in as the drawing finishes, so growth looks clean
+  const amp = rippleAmp * g;
+
   strokeWeight(1);
+  for (let i = 0; i < n; i++) {
+    const j = i * 4;
+    let x1 = segs[j] * scl + offX, y1 = segs[j + 1] * scl + offY;
+    let x2 = segs[j + 2] * scl + offX, y2 = segs[j + 3] * scl + offY;
 
-  // Real draw, with hue shifting along the path
-  let i = 0;
-  walk(sentence, p, (x1, y1, x2, y2) => {
-    stroke((i / count) * 300, 70, 100);
-    line(x1 * s + offX, y1 * s + offY, x2 * s + offX, y2 * s + offY);
-    i++;
-  });
+    // Warp depends on position, not index, so shared endpoints stay connected
+    x1 += sin(y1 * rippleScale + t * 1.5) * amp;
+    y1 += cos(x1 * rippleScale + t * 1.3) * amp;
+    x2 += sin(y2 * rippleScale + t * 1.5) * amp;
+    y2 += cos(x2 * rippleScale + t * 1.3) * amp;
 
-  // Draw the UI text
-  noStroke();
-  fill(0, 0, 100);
-  textSize(16);
-  textAlign(LEFT, TOP);
-  text(`${currentKey}: ${p.name}  (iterations: ${p.iterations})`, 10, 18);
-  text("Press 1-9 to select a preset, click to add an iteration", 10, height - 30);
-  if (statusMessage) text(statusMessage, 10, height - 52);
+    stroke(((i / segCount) * 300 + t * hueSpeed) % 360, 70, 100);
+    line(x1, y1, x2, y2);
+
+    // Additional ripple effect based on frequency
+    x1 += sin(y1 * rippleFreq + t * 1.5) * amp;
+    y1 += cos(x1 * rippleFreq + t * 1.3) * amp;
+    x2 += sin(y2 * rippleFreq + t * 1.5) * amp;
+    y2 += cos(x2 * rippleFreq + t * 1.3) * amp;
+
+    stroke(((i / segCount) * 300 + t * hueSpeed) % 360, 70, 100);
+    line(x1, y1, x2, y2);
+  }
+
+  drawUI();
 }
 
 // Expand the axiom by applying the rules
