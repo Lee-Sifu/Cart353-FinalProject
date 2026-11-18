@@ -44,9 +44,9 @@ let startMs = 0;        // when the current growth animation began
 let growSeconds = 3;    // how long the growth phase lasts
 
 //animation tweaks
-const rippleAmp = 0.1; // amplitude of the ripple effect
-const rippleFreq = 0.5; // frequency of the ripple effect
-const rippleScale = 0.5; // scale of the ripple effect
+const rippleAmp = 10; // amplitude of the ripple effect
+const rippleFreq = 5.5; // frequency of the ripple effect
+const rippleScale = 1.5; // scale of the ripple effect
 const hueSpeed = 40; // speed of hue change in degrees per second
 
 function setup() {
@@ -200,7 +200,7 @@ function keyPressed() {
     rebuild();
   } else if (key === " ") {
     rebuild();
-  }
+  }    
 }
 
 // Click to add an iteration (wraps around at 9)
