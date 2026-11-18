@@ -127,10 +127,10 @@ function draw() {
     line(x1, y1, x2, y2);
 
     // Additional ripple effect based on frequency
-    x1 += sin(y1 * rippleFreq + t * 1.5) * amp;
-    y1 += cos(x1 * rippleFreq + t * 1.3) * amp;
-    x2 += sin(y2 * rippleFreq + t * 1.5) * amp;
-    y2 += cos(x2 * rippleFreq + t * 1.3) * amp;
+    x1 += sin(y1 * rippleFreq + t * 1.5) * rippleScale;
+    y1 += cos(x1 * rippleFreq + t * 1.3) * rippleScale;
+    x2 += sin(y2 * rippleFreq + t * 1.5) * rippleScale;
+    y2 += cos(x2 * rippleFreq + t * 1.3) * rippleScale;
 
     stroke(((i / segCount) * 300 + t * hueSpeed) % 360, 70, 100);
     line(x1, y1, x2, y2);
