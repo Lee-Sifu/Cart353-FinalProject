@@ -49,6 +49,12 @@ const rippleFreq = 5.5; // frequency of the ripple effect
 const rippleScale = 1.5; // scale of the ripple effect
 const hueSpeed = 40; // speed of hue change in degrees per second
 
+// mouse interaction
+const mouseRadius = 50; // how far the cursor's influence reaches (px)
+const mouseStrength = 0.5; // strength of mouse interaction for ripple effect
+const mouseFalloff = 0.1; // falloff of mouse interaction for ripple effect
+let rx, ry; // output of mouse interaction for warp effect
+
 function setup() {
   createCanvas(700, 700);
   colorMode(HSB, 360, 100, 100);
