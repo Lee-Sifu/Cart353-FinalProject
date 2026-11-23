@@ -52,7 +52,6 @@ const hueSpeed = 40; // speed of hue change in degrees per second
 // mouse interaction
 const mouseRadius = 50; // how far the cursor's influence reaches (px)
 const mouseStrength = 0.5; // strength of mouse interaction for ripple effect
-const mouseFalloff = 0.1; // falloff of mouse interaction for ripple effect
 let rx, ry; // output of mouse interaction for warp effect
 
 function setup() {
@@ -109,6 +108,7 @@ function draw() {
   const t = millis() / 1000;
   const elapsed = (millis() - startMs) / 1000;
 
+
   // Growth progress, eased so it starts fast and settles
   const g = constrain(elapsed / growSeconds, 0, 1);
   const eased = 1 - pow(1 - g, 3);
@@ -124,10 +124,8 @@ function draw() {
     let x2 = segs[j + 2] * scl + offX, y2 = segs[j + 3] * scl + offY;
 
     // Warp depends on position, not index, so shared endpoints stay connected
-    x1 += sin(y1 * rippleScale + t * 1.5) * amp;
-    y1 += cos(x1 * rippleScale + t * 1.3) * amp;
-    x2 += sin(y2 * rippleScale + t * 1.5) * amp;
-    y2 += cos(x2 * rippleScale + t * 1.3) * amp;
+    [x1, y1] = warp(x1, y1, t, amp, g);
+    [x2, y2] = warp(x2, y2, t, amp, g);
 
     stroke(((i / segCount) * 300 + t * hueSpeed) % 360, 70, 100);
     line(x1, y1, x2, y2);
@@ -156,6 +154,26 @@ function drawUI() {
   text("Press 1-9 to select a preset, click to add an iteration, SPACE to replay",
        10, height - 30);
   if (statusMessage) text(statusMessage, 10, height - 52);
+}
+
+// Warp a point based on mouse position and ripple effect
+function warp(x, y, t, amp, g) {
+  const ox = x, oy = y;
+
+  x += sin(oy * rippleScale + t * rippleFreq) * amp;
+  y += cos(ox * rippleScale + t * rippleFreq * 0.87) * amp;
+
+  const dx = ox - mouseX, dy = oy - mouseY;
+  const d2 = dx * dx + dy * dy;
+  if (d2 < mouseRadius * mouseRadius && d2 > 0.01) {
+    const d = sqrt(d2);
+    const k = 1 - d / mouseRadius;          // 1 at cursor, 0 at the edge
+    const push = k * k * mouseStrength * g; // soft falloff
+    x += (dx / d) * push;
+    y += (dy / d) * push;
+  }
+
+  rx = x; ry = y;
 }
 
 // Expand the axiom by applying the rules
@@ -206,6 +224,7 @@ function keyPressed() {
     rebuild();
   } else if (key === " ") {
     rebuild();
+    return false; // prevent scrolling
   }    
 }
 
