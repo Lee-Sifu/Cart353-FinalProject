@@ -45,13 +45,13 @@ let growSeconds = 3;    // how long the growth phase lasts
 
 //animation tweaks
 const rippleAmp = 10; // amplitude of the ripple effect
-const rippleFreq = 5.5; // frequency of the ripple effect
+const rippleFreq = 3; // frequency of the ripple effect
 const rippleScale = 1.5; // scale of the ripple effect
 const hueSpeed = 40; // speed of hue change in degrees per second
 
 // mouse interaction
-const mouseRadius = 50; // how far the cursor's influence reaches (px)
-const mouseStrength = 0.5; // strength of mouse interaction for ripple effect
+const mouseRadius = 120; // how far the cursor's influence reaches (px)
+const mouseStrength = 40; // strength of mouse interaction for ripple effect
 let rx, ry; // output of mouse interaction for warp effect
 
 function setup() {
@@ -120,21 +120,10 @@ function draw() {
   strokeWeight(1);
   for (let i = 0; i < n; i++) {
     const j = i * 4;
-    let x1 = segs[j] * scl + offX, y1 = segs[j + 1] * scl + offY;
-    let x2 = segs[j + 2] * scl + offX, y2 = segs[j + 3] * scl + offY;
-
-    // Warp depends on position, not index, so shared endpoints stay connected
-    [x1, y1] = warp(x1, y1, t, amp, g);
-    [x2, y2] = warp(x2, y2, t, amp, g);
-
-    stroke(((i / segCount) * 300 + t * hueSpeed) % 360, 70, 100);
-    line(x1, y1, x2, y2);
-
-    // Additional ripple effect based on frequency
-    x1 += sin(y1 * rippleFreq + t * 2) * rippleScale;
-    y1 += cos(x1 * rippleFreq + t * 1.4) * rippleScale;
-    x2 += sin(y2 * rippleFreq + t * 2.2) * rippleScale;
-    y2 += cos(x2 * rippleFreq + t * 3.3) * rippleScale;
+   warp(segs[j] * scl + offX, segs[j + 1] * scl + offY, t, amp, g);
+    const x1 = rx, y1 = ry;
+    warp(segs[j + 2] * scl + offX, segs[j + 3] * scl + offY, t, amp, g);
+    const x2 = rx, y2 = ry;
 
     stroke(((i / segCount) * 300 + t * hueSpeed) % 360, 70, 100);
     line(x1, y1, x2, y2);
