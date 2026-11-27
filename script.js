@@ -54,9 +54,36 @@ const mouseRadius = 120; // how far the cursor's influence reaches (px)
 const mouseStrength = 40; // strength of mouse interaction for ripple effect
 let rx, ry; // output of mouse interaction for warp effect
 
+// shader setup
+const FLIP_Y = true; // flip the y-axis for shader coordinates
+let sh; // shader object
+let pg; // p5.Graphics object for offscreen rendering
+let ui; // p5.Graphics object for UI overlay
+
+const shaderVert = `
+  attribute vec3 aPosition;
+  varying vec2 vTexCoord;
+  void main() {
+    vTexCoord = (aPosition.xy + 1.0) / 2.0;
+    gl_Position = vec4(aPosition, 1.0);
+  }
+`;
+
+const shaderFrag = `
+  precision mediump float;
+  uniform sampler2D uTexture;
+  varying vec2 vTexCoord;
+  void main() {
+    gl_FragColor = texture2D(uTexture, vTexCoord);
+  }
+`;
+
 function setup() {
-  createCanvas(700, 700);
-  colorMode(HSB, 360, 100, 100);
+  createCanvas(700, 700, WEBGL);
+  pg = createGraphics(700, 700);   // 2D buffer the fractal is drawn into
+  pg.pixelDensity(1);
+  pixelDensity(1);
+  sh = createShader(vertSrc, fragSrc);
   rebuild();
 }
 // Rebuild the current preset and compute the segments
