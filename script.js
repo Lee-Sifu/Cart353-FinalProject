@@ -120,17 +120,25 @@ function rebuild() {
 }
 
 function draw() {
-   background(0, 0, 10);
+   drawFractal();
+   renderShader(sh);
+   drawUI();
+  }
 
+  function drawFractal() {
+  background(0, 0, 100);
   if (failed) {
-    noStroke();
-    fill(0, 0, 100);
-    textSize(16);
-    textAlign(LEFT, TOP);
-    text("This preset exceeds the drawing limit.", 10, 18);
-    drawUI();
+    fill(0, 0, 0);
+    textSize(24);
+    textAlign(CENTER, CENTER);
+    text("Too many symbols to draw; try a smaller preset or fewer iterations",
+         width / 2, height / 2);
     return;
   }
+
+  pg.background(0, 0, 100);
+  pg.strokeWeight(1);
+  pg.colorMode(HSL, 360, 100, 100);
 
   const t = millis() / 1000;
   const elapsed = (millis() - startMs) / 1000;
@@ -144,7 +152,7 @@ function draw() {
   // Ripples fade in as the drawing finishes, so growth looks clean
   const amp = rippleAmp * g;
 
-  strokeWeight(1);
+  pg.strokeWeight(1.5);
   for (let i = 0; i < n; i++) {
     const j = i * 4;
    warp(segs[j] * scl + offX, segs[j + 1] * scl + offY, t, amp, g);
@@ -152,24 +160,42 @@ function draw() {
     warp(segs[j + 2] * scl + offX, segs[j + 3] * scl + offY, t, amp, g);
     const x2 = rx, y2 = ry;
 
-    stroke(((i / segCount) * 300 + t * hueSpeed) % 360, 70, 100);
-    line(x1, y1, x2, y2);
+    const pos = i / segCount;            
+    pg.stroke(pos * 255, 255, 0);        
+    pg.line(x1, y1, x2, y2);
   }
+}
 
-  drawUI();
+
+function renderShader(shader) {
+  shader.setUniform("uTexture", pg);
+  shader.setUniform("uFlipY", FLIP_Y ? 1 : 0);
+  shader.setUniform("uResolution", [width, height]);
+  shader.setUniform("uTime", millis() / 1000);
+
+  push();
+  noStroke();
+  shader(shader);
+  rect(-width / 2, -height / 2, width, height);
+  pop();
 }
 
 // Draw the UI text overlay
 function drawUI() {
   const p = presets[currentKey];
-  noStroke();
-  fill(0, 0, 100);
-  textSize(16);
-  textAlign(LEFT, TOP);
-  text(`${currentKey}: ${p.name}  (iterations: ${p.iterations})`, 10, 18);
-  text("Press 1-9 to select a preset, click to add an iteration, SPACE to replay",
-       10, height - 30);
-  if (statusMessage) text(statusMessage, 10, height - 52);
+  ui.clear();
+  ui.noStroke();
+  ui.fill(255);
+  ui.textSize(16);
+  ui.textAlign(LEFT, TOP);
+
+  if (failed) ui.text("This preset exceeds the drawing limit.", 10, 40);
+  ui.text(`${currentKey}: ${p.name}  (iterations: ${p.iterations})`, 10, 18);
+  ui.text("Press 1-9 to select a preset, click to add an iteration, SPACE to replay",
+          10, height - 30);
+  if (statusMessage) ui.text(statusMessage, 10, height - 52);
+
+  image(ui, -width / 2, -height / 2, width, height);
 }
 
 // Warp a point based on mouse position and ripple effect
