@@ -83,7 +83,9 @@ function setup() {
   pg = createGraphics(700, 700);   // 2D buffer the fractal is drawn into
   pg.pixelDensity(1);
   pixelDensity(1);
-  sh = createShader(vertSrc, fragSrc);
+  ui = createGraphics(700, 700);   // 2D buffer for the UI overlay
+  ui.pixelDensity(1);
+  sh = createShader(shaderVert, shaderFrag);
   rebuild();
 }
 // Rebuild the current preset and compute the segments
@@ -136,9 +138,8 @@ function draw() {
     return;
   }
 
-  pg.background(0, 0, 100);
-  pg.strokeWeight(1);
-  pg.colorMode(HSL, 360, 100, 100);
+ pg.background(0);
+ pg.stroke(pos * 255, 255, 0); 
 
   const t = millis() / 1000;
   const elapsed = (millis() - startMs) / 1000;
@@ -168,16 +169,13 @@ function draw() {
 
 
 function renderShader(shader) {
-  shader.setUniform("uTexture", pg);
-  shader.setUniform("uFlipY", FLIP_Y ? 1 : 0);
-  shader.setUniform("uResolution", [width, height]);
-  shader.setUniform("uTime", millis() / 1000);
-
-  push();
+   shader(sh);
+  sh.setUniform("uTex", pg);
+  sh.setUniform("uTime", millis() / 1000);
+  sh.setUniform("uRes", [width, height]);
   noStroke();
-  shader(shader);
-  rect(-width / 2, -height / 2, width, height);
-  pop();
+  rect(0, 0, width, height);
+  resetShader();
 }
 
 // Draw the UI text overlay
